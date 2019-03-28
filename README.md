@@ -4,4 +4,4 @@ People's name and Picture are in the data set which is preprocessed. In F_recog.
 
 precision (0.87)   recall (0.85)  f1-score (0.85) 
 
-
+In Open-source_websites.docx there have some open sources code link for facial recognition.
