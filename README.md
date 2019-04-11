@@ -22,7 +22,7 @@ Our data is preprocessed (can be downloaded from ) and have two file, one is pic
 
 Different people have different number of pictures.
 
-There have 2 kinds of text file, in one text file there have name along with ()
+Ultamately in the data set there have data (unexplained but numpy array), images (image data) and target (unexplained), target name(name of the image) .
 
 In another text file assigning one name for people's multiple picture.
 
