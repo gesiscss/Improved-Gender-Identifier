@@ -35,7 +35,9 @@ We have divided the whole dataset as training(75%) and test(25%) for both images
 # Compute a PCA (eigenfaces) on the face dataset (treated as unlabeled dataset): unsupervised feature extraction / dimensionality reduction.
 
 Extracting the top 150 eigenfaces from 966 faces needed time to do 7.997s
+
 Projecting the input data on the eigenfaces orthonormal basis needed time to do 0.047s
+
 We have applied PCA on both train and test data sets.
 
 # After that train a SVM classification model using 'rbf' kernel
@@ -52,5 +54,6 @@ SVC(C=1000.0, cache_size=200, class_weight='balanced', coef0=0.0,
  # Predictions
  
  Then we have applied the model on test data and got the results.
+ 
  After that we showed the pictures and the confusion matrix.
 
