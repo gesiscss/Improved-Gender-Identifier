@@ -15,7 +15,7 @@ and   Male   = 1
 
 ## Requirements
 
-*Keras (Using TensorFlow backend)
+* Keras (Using TensorFlow backend)
 
 ## About
 
