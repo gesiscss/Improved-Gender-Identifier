@@ -33,11 +33,11 @@ You can use this model to predict the gender using image or a bunch of images (s
 
 Image could be inputed mostly 2 different ways:
 
-     o   Web-link
+    * Web-link
 
    Simply provide the web address of the image or images as web link in the system (e.g., ```web_link = “https://github.com/gesiscss/Improved-Gender -Identifier/blob/master/Gender_classification_CNN/Data/a.jpeg”```).
    
-     o   Directory
+     * Directory
 
 
    You need to create a directory called ```‘data’``` in your default directory or individually and keep your image or images in that directory in the system (e.g., ```[default directory]/data/```).
