@@ -30,7 +30,7 @@ Image could be inputed mostly 2 different ways:
    * Directory
 
 
-   You need to create a directory called ```‘data’``` in your default directory or individually and keep your image or images in that directory in the system (e.g., ```[default directory]/data/```).
+   You need to create a directory called ```‘data’``` in your default directory or individually and keep your image or images in that directory in the system (e.g., ```[default directory] /data/```).
 
 
 ## Install
@@ -76,7 +76,7 @@ Female images: 1379
 * Scholars Dataset (manual labeled at GESIS)
 
 
-Source: ```(gesis)[https://gesis.org/]```
+Source: (gesis)[https://gesis.org/]
 
 What is in the data: Images of xx scholars which have been manually labeled by the coders at GESIS. 
 
