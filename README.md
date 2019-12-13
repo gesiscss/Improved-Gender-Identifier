@@ -45,6 +45,7 @@ Image could be inputed mostly 2 different ways:
 * IMDB Dataset
 
 
+
 Source: ```https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/```
 
 What is in the data: The IMDB dataset contains 460,723 facial images (with gender and age labels) of film stars, predominantly Hollywood actors and actresses. We have taken only the frontal faces which has the face score 4.5 or above and get 33,147 facial images.
@@ -56,6 +57,7 @@ Male images: 14370
 Female images: 18777
 
 
+
 * Wikipedia Dataset
 
 
@@ -65,15 +67,16 @@ What is in the data: Wikipedia dataset includes 62,328 (with gender and age labe
 
 Number of images: 3,209
 
-Male images: 1814
+Male images: 1830
 
-Female images: 1395
+Female images: 1379
+
 
 
 * Scholars Dataset (manual labeled at GESIS)
 
 
-Source: ```https://gesis.org/```
+Source: ```(gesis)[https://gesis.org/]```
 
 What is in the data: Images of xx scholars which have been manually labeled by the coders at GESIS. 
 
