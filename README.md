@@ -93,6 +93,15 @@ Male images: 1,953
 Female images: 1,371
 
 
+## Limitation
+
+We have some limitations in our training model i.e.,
+        a) Accuracy for females is lower than the accuracy for males.
+        b) Predictions for dark, low resolutions and less contrast images is lower.
+        c) For the people of east asia prediction accuracy is also lower.
+
+
+
 ## FAQs
 
 ## More Questions
