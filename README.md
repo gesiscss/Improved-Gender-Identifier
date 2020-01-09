@@ -12,6 +12,12 @@
 GINN takes vision inputs specifically image of a person or web address of a image. Generally GINN identify faces from the image and take this single or multiple faces as a input and provides the gender of that face or faces with the probability of accuracy if it’s human otherwise it skip the prediction of image data.
 
 
+## Training
+
+To train our model we have used full dataset of IMDB and WIKI together (after cleaning total 36,356 images of  human). We have used 10-fold cross-validation to minimize the bias and got 98.28 % training accuracy.
+
+
+
 ## How to Use: 
 
 This model takes an input image and gives the prediction as an output. You need to 
