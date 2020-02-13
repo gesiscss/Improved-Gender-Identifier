@@ -9,7 +9,7 @@
 
 ## About
 
-GINN takes vision inputs specifically image of a person or web address of a image. Generally GINN identify faces from the image and take this single or multiple faces as a input and provides the gender of that face or faces with the probability of accuracy if it’s human otherwise it skip the prediction of image data.
+GIGIDL takes vision inputs specifically image of a person or web address of a image. Generally GIGIDL identify faces from the image and take this single or multiple faces as a input and provides the gender of that face or faces with the probability of accuracy if it’s human otherwise it skip the prediction of image data.
 
 
 ## Training
@@ -31,7 +31,7 @@ Image could be inputed mostly 2 different ways:
 
    * Web-link
 
-   Simply provide the web address of the image or images as web link in the system (e.g., ```web_link = “https://github.com/gesiscss/Improved-Gender -Identifier/blob/master/Gender_classification_CNN/Data/a.jpeg”```).
+   Simply provide the web address of the image or images as web link in the system (e.g., ```web_link = “https://github.com/gesiscss/Improved-Gender -Identifier/blob/master/GIGIDL/Data/a.jpeg”```).
    
    * Directory
 
