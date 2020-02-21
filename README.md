@@ -1,4 +1,4 @@
-![alt text](C://Users/rahmanar/Desktop/logo.png)
+![alt text](http://193.175.238.89/Gender_Inference/static/images/logo_banner_v3.png)
 
 
 
