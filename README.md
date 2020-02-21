@@ -48,7 +48,7 @@ Image could be inputed mostly 2 different ways:
 ## Datasets
 
 
-* IMDB Dataset ["https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/"]
+* [IMDB Dataset](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/)
 
 
 
