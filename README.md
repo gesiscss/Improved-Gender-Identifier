@@ -93,6 +93,28 @@ Male images: 1,953
 Female images: 1,371
 
 
+## Comparison:
+
+* CNN performed better than M3 to predict IMDB and WIKI datasets as CNN trained on IMDB+WIKI datasets.
+
+* For scholar dataset, M3 have performed better as M3 trained on social network images and this dataset is contained different scholars images from different parts of the world.
+
+* Quality of OUI dataset is very bad especially females as all the images have collected by doing continuous shot of front camera using mobile app randomly which is not the similar quality like social network profile. So, M3 have performed worst for OUI dataset.
+
+* As M3 have trained on particularly twitter profile so for twitter dataset it’s normal to show better results.
+
+* Every performance have huge differences between male and female images. We have checked the reasons and got some problems which need to be minimized to get better performance for female and that is, 
+
+        a) Bad performance for coloured data 
+        b) Better performance when the canvas is not coloured i.e. noisy 
+        c) More better when the canvas is perfectly white. For example, we have tried to predict using gender shade datasets which is very noisy and coloured female images only and got accuracy 0.67 when for all female it was 0.58 using GIGIDL. Then we removed the images which background is so much noisy and coloured and remained only coloured but white background then we have got accuracy 0.71 i.e. the performance have improved depending on the background colour.
+
+## Note: 
+
+Quality images means low resolution, background is noisy, face is not frontal, side view or multiple objects in the image, have eye glass, cap or cloths top to the head and so on.
+
+
+
 ## Limitations
 
 We have some limitations in our training model i.e.,
