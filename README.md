@@ -1,5 +1,5 @@
 
-# Improved Gender Inference
+# GESIS Improved Gender Inference Deep Learning
 
 
 
@@ -95,7 +95,7 @@ Female images: 1,371
 
 ## Comparison:
 
-* CNN performed better than M3 to predict IMDB and WIKI datasets as CNN trained on IMDB+WIKI datasets.
+* GIGIDL performed better than M3 to predict IMDB and WIKI datasets as GIGIDL trained on IMDB+WIKI datasets.
 
 * For scholar dataset, M3 have performed better as M3 trained on social network images and this dataset is contained different scholars images from different parts of the world.
 
@@ -107,11 +107,12 @@ Female images: 1,371
 
         a) Bad performance for coloured data 
         b) Better performance when the canvas is not coloured i.e. noisy 
-        c) More better when the canvas is perfectly white. For example, we have tried to predict using gender shade datasets which is very noisy and coloured female images only and got accuracy 0.67 when for all female it was 0.58 using GIGIDL. Then we removed the images which background is so much noisy and coloured and remained only coloured but white background then we have got accuracy 0.71 i.e. the performance have improved depending on the background colour.
+        c) More better when the canvas is perfectly white. For example, we have tried to predict using gender shade datasets
+        which is very noisy and coloured female images only and got accuracy 0.67 when for all female it was 0.58 using GIGIDL.
+        Then we removed the images which background is so much noisy and coloured and remained only coloured but white
+        background then we have got accuracy 0.71 i.e. the performance have improved depending on the background colour.
 
-## Note: 
-
-Quality images means low resolution, background is noisy, face is not frontal, side view or multiple objects in the image, have eye glass, cap or cloths top to the head and so on.
+Note: Quality images means low resolution, background is noisy, face is not frontal, side view or multiple objects in the image, have eye glass, cap or cloths top to the head and so on.
 
 
 
