@@ -89,18 +89,6 @@ Male images: 1,953
 Female images: 1,371
 
 
-
-
-## Comparison:
-
-* GIGIDL performed better than M3 to predict IMDB and WIKI datasets as GIGIDL trained on IMDB+WIKI datasets.
-
-* For scholar dataset, M3 have performed better as M3 trained on social network images and this dataset is contained different scholars images from different parts of the world.
-
-* Quality of OUI dataset is very bad especially females as all the images have collected by doing continuous shot of front camera using mobile app randomly which is not the similar quality like social network profile. So, M3 have performed worst for OUI dataset.
-
-* As M3 have trained on particularly twitter profile so for twitter dataset it’s normal to show better results.
-
 * Every performance have huge differences between male and female images. We have checked the reasons and got some problems which need to be minimized to get better performance for female and that is, 
 
         a) Bad performance for coloured data 
