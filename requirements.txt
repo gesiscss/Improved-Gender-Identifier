@@ -3,7 +3,8 @@ numpy>=1.16.5
 pycld2>=0.31
 requests
 pandas>=0.24.2
-cv2>=4.1.0
-PIL>=6.2.1
+opencv-python>=4.1.0
+Pillow>=6.2.1
+CMake
 dlib>=19.17.0
 face_recognition>=1.2.3
