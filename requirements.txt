@@ -15,3 +15,4 @@ m3inference
 keras
 tensorflow
 imutils
+gender_guesser
