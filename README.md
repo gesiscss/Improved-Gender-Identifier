@@ -55,6 +55,7 @@ Image could be inputed mostly 2 different ways:
 * [IMDB Dataset](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/)
 
 
+
 What is in the data: The IMDB dataset contains 460,723 facial images (with gender and age labels) of film stars, predominantly Hollywood actors and actresses. We have taken only the frontal faces which has the face score 4.5 or above and get 33,147 facial images.
 
 Number of images:  33,147
@@ -114,6 +115,9 @@ We have some limitations in our training model i.e.,
 
 
 ## FAQs
+
+If you have any questions then contact with the team members.
+
 
 ## More Questions
 
