@@ -8,6 +8,7 @@ import urllib.request
 import pdb
 import pandas as pd
 from time import sleep
+import random
 
 def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path="C:\\Users\\heuzerjr\\chromedriver.exe"):
     # this function is based on code by github user: yeamusic21, from gist discussion:
@@ -53,14 +54,14 @@ def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path=
 
 
 #csv_path = "XXXXX\\female_name_url.csv"
-csv_path = "..\\..\\Scholar_data\\female_name_url_sampleN10.csv"
+csv_path = "..\\..\\Scholar_data\\male_name_url_sample10.csv"
 csv_data = pd.read_csv(csv_path, header=None)
 names = csv_data.iloc[:,0]
 for n in names:
     print("working on name: " + n)
     search_term = n.replace(" ", "+")
-    download_gimags(search_term, 10, "..\\data\\test_out\\" + search_term + "\\")
-    sleep(1)
+    download_gimags(search_term, 5, "..\\data\\male_sample10\\" + search_term + "\\")
+    sleep(random.random() * 5)
 
 #st = "Bill+Clinton"
 #download_gimags(st, 10, "XXXX" + st + "\\")
