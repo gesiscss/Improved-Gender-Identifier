@@ -52,16 +52,32 @@ def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path=
     print(succounter, "pictures succesfully downloaded")
     browser.close()
 
+def csv_iterate(csv_path, n_imgs, save_path, max_sleep_time=5):
+    csv_data = pd.read_csv(csv_path, header=None)
 
-#csv_path = "XXXXX\\female_name_url.csv"
-csv_path = "..\\..\\Scholar_data\\male_name_url_sample10.csv"
-csv_data = pd.read_csv(csv_path, header=None)
-names = csv_data.iloc[:,0]
-for n in names:
-    print("working on name: " + n)
-    search_term = n.replace(" ", "+")
-    download_gimags(search_term, 5, "..\\data\\male_sample10\\" + search_term + "\\")
-    sleep(random.random() * 5)
+    # assuming there is no explicit index, just the position in the file
+    names = csv_data.iloc[:,0]
+    paths = []
+    for n in names:
+        print("working on name: " + n)
+        search_term = n.replace(" ", "+")
+        this_save_path = save_path + search_term + "\\"
+        paths.append(this_save_path)
+        download_gimags(search_term, n_imgs, this_save_path)
+        sleep(random.random() * max_sleep_time)
 
-#st = "Bill+Clinton"
-#download_gimags(st, 10, "XXXX" + st + "\\")
+    glossary = pd.DataFrame({
+        'name' : names, 
+        'picture_location' : paths
+        })
+    glossary.to_csv(save_path + "glossary.csv")
+
+
+n_images_to_scrape = 20
+
+male = ("..\\..\\Scholar_data\\male_name_url.csv", "..\\data\\male_0722\\")
+female = ("..\\..\\Scholar_data\\female_name_url.csv", "..\\data\\female_0722\\")
+for f in (female, male):
+    csv_input_path = f[0]
+    output_path = f[1]
+    csv_iterate(csv_input_path, n_images_to_scrape, output_path)
