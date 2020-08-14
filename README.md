@@ -55,6 +55,7 @@ Image could be inputed mostly 2 different ways:
 * [IMDB Dataset](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/)
 
 
+
 What is in the data: The IMDB dataset contains 460,723 facial images (with gender and age labels) of film stars, predominantly Hollywood actors and actresses. We have taken only the frontal faces which has the face score 4.5 or above and get 33,147 facial images.
 
 Number of images:  33,147
@@ -94,10 +95,7 @@ Female images: 1,371
 
         a) Bad performance for coloured data 
         b) Better performance when the canvas is not coloured i.e. noisy 
-        c) More better when the canvas is perfectly white. For example, we have tried to predict using gender shade datasets
-        which is very noisy and coloured female images only and got accuracy 0.67 when for all female it was 0.58 using GIGIDL.
-        Then we removed the images which background is so much noisy and coloured and remained only coloured but white
-        background then we have got accuracy 0.71 i.e. the performance have improved depending on the background colour.
+        c) More better when the canvas is perfectly white.
 
 Note: Quality images means low resolution, background is noisy, face is not frontal, side view or multiple objects in the image, have eye glass, cap or cloths top to the head and so on.
 
@@ -114,6 +112,9 @@ We have some limitations in our training model i.e.,
 
 
 ## FAQs
+
+If you have any questions then contact with the team members.
+
 
 ## More Questions
 
