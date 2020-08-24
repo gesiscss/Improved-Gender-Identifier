@@ -5,10 +5,19 @@ import os
 import urllib3
 import argparse
 import urllib.request
-import pdb
 import pandas as pd
 from time import sleep
 import random
+
+from scrape_config import path_chromedriver, pic_upload_url
+import requests
+from shutil import copyfile
+
+def query_for_confidence_values(image_path):
+    fs = {"" : open(image_path, 'rb')}
+    r = requests.post(pic_upload_url, files=fs)
+    json_data = json.loads(r.text)
+    return (json_data["number_of_faces"], json_data["their_detection_scores"])
 
 def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path="C:\\Users\\heuzerjr\\chromedriver.exe"):
     # this function is based on code by github user: yeamusic21, from gist discussion:
@@ -30,7 +39,11 @@ def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path=
         browser.execute_script("window.scrollBy(0,10000)")
 
     os.makedirs(dest_folder_path)
+    one_face_folder_path = dest_folder_path + "oneFace\\"
+    os.makedirs(one_face_folder_path)
     print("start scraping ...")
+
+    # TODO: catch when not sufficient face images are found and scroll is over
     for x in browser.find_elements_by_xpath('//img[contains(@class,"rg_i Q4LuWd")]'):
         if succounter == max_count:
             break
@@ -45,7 +58,10 @@ def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path=
             path = dest_folder_path
             path += new_filename
             urllib.request.urlretrieve(img, path)
-            succounter += 1
+            (n_faces, conf_vals) = query_for_confidence_values(path)
+            if n_faces == 1 and conf_vals[0] >= 0:
+                copyfile(path, one_face_folder_path + new_filename)
+                succounter += 1
         except Exception as e:
             print(e)
 
@@ -63,7 +79,7 @@ def csv_iterate(csv_path, n_imgs, save_path, max_sleep_time=5):
         search_term = n.replace(" ", "+")
         this_save_path = save_path + search_term + "\\"
         paths.append(this_save_path)
-        download_gimags(search_term, n_imgs, this_save_path)
+        download_gimags(search_term, n_imgs, this_save_path, path_chromedriver)
         sleep(random.random() * max_sleep_time)
 
     glossary = pd.DataFrame({
@@ -75,8 +91,9 @@ def csv_iterate(csv_path, n_imgs, save_path, max_sleep_time=5):
 
 n_images_to_scrape = 20
 
-male = ("..\\..\\Scholar_data\\male_name_url.csv", "..\\data\\male_0722\\")
-female = ("..\\..\\Scholar_data\\female_name_url.csv", "..\\data\\female_0722\\")
+#male = ("..\\..\\Scholar_data\\male_name_url.csv", "..\\data\\male_0824\\")
+male = None
+female = ("..\\..\\Scholar_data\\female_name_url_sampleN10.csv", "..\\data\\female_samp_0824\\")
 for f in (female, male):
     csv_input_path = f[0]
     output_path = f[1]
