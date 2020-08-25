@@ -13,6 +13,9 @@ import scrape_config as sc
 import requests
 from shutil import copyfile
 
+import sys
+sys.stdout = open('sl_0825_abf.txt','wt')
+
 def query_confidence_values(image_path):
     fs = {"" : open(image_path, 'rb')}
     r = requests.post(sc.PIC_UPLOAD_URL, files=fs)
@@ -39,38 +42,36 @@ def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path=
 
     # button_more_imgs = "/html/body/div[2]/c-wiz/div[4]/div[1]/div/div/div/div/div[5]/input"
     # browser.find_element_by_xpath(button_more_imgs).click()
+    try:
+        # TODO: catch when not sufficient face images are found and scroll is over
+        for x in browser.find_elements_by_xpath('//img[contains(@class,"rg_i Q4LuWd")]'):
+            if succounter == max_count:
+                break
+            counter = counter + 1
+            print("Total Count:", counter)
+            print("Successful Count:", succounter)
+            img = x.get_attribute('src')
+            if img is None:
+                img = x.get_attribute('data-src')    
+                        
+            new_filename = "image"+str(counter)+".jpg"
+            try:
+                path = dest_folder_path
+                path += new_filename
+                urllib.request.urlretrieve(img, path)
+                (n_faces, conf_vals) = query_confidence_values(path)
+                if n_faces == 1 and conf_vals[0] >= sc.THRESHOLD_CONF_VALUE:
+                    copyfile(path, one_face_folder_path + new_filename)
+                    succounter += 1
+            except Exception as e:
+                print(e)
+        print(succounter, "pictures succesfully downloaded")
+        browser.close()
 
-    os.makedirs(dest_folder_path)
-    one_face_folder_path = dest_folder_path + "oneFace\\"
-    os.makedirs(one_face_folder_path)
-    print("start scraping ...")
+    except FileExistsError:
+        print("skipping duplicate name " + search_term)
 
-    # TODO: catch when not sufficient face images are found and scroll is over
-    for x in browser.find_elements_by_xpath('//img[contains(@class,"rg_i Q4LuWd")]'):
-        if succounter == max_count:
-            break
-        counter = counter + 1
-        print("Total Count:", counter)
-        print("Successful Count:", succounter)
-        img = x.get_attribute('src')
-        new_filename = "image"+str(counter)+".jpg"
-
-        try:
-            path = dest_folder_path
-            path += new_filename
-            urllib.request.urlretrieve(img, path)
-            (n_faces, conf_vals) = query_confidence_values(path)
-            # TODO put conf threshold value in scrape_config
-            if n_faces == 1 and conf_vals[0] >= sc.THRESHOLD_CONF_VALUE:
-                copyfile(path, one_face_folder_path + new_filename)
-                succounter += 1
-        except Exception as e:
-            print(e)
-
-    print(succounter, "pictures succesfully downloaded")
-    browser.close()
-
-def csv_iterate(csv_path, n_imgs, save_path, max_sleep_time=5):
+def csv_iterate(csv_path, save_path, max_sleep_time=5):
     csv_data = pd.read_csv(csv_path, header=None)
 
     # assuming there is no explicit index, just the position in the file
@@ -81,7 +82,7 @@ def csv_iterate(csv_path, n_imgs, save_path, max_sleep_time=5):
         search_term = n.replace(" ", "+")
         this_save_path = save_path + search_term + "\\"
         paths.append(this_save_path)
-        download_gimags(search_term, n_imgs, this_save_path, sc.PATH_CHROMEDRIVER)
+        download_gimags(search_term, sc.N_FACE_IMAGES_TO_SCRAPE, this_save_path, sc.PATH_CHROMEDRIVER)
         sleep(random.random() * max_sleep_time)
 
     glossary = pd.DataFrame({
@@ -90,5 +91,5 @@ def csv_iterate(csv_path, n_imgs, save_path, max_sleep_time=5):
         })
     glossary.to_csv(save_path + "glossary.csv")
 
-csv_iterate(sc.PATHS_MALE[0], sc.N_FACE_IMAGES_TO_SCRAPE, sc.PATHS_MALE[1])
-csv_iterate(sc.PATHS_FEMALE[0], sc.N_FACE_IMAGES_TO_SCRAPE, sc.PATHS_FEMALE[1])
+csv_iterate(sc.PATHS_MALE[0], sc.PATHS_MALE[1])
+# csv_iterate(sc.PATHS_FEMALE[0], sc.PATHS_FEMALE[1])
