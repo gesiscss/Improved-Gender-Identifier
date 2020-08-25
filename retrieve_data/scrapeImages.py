@@ -39,36 +39,35 @@ def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path=
 
     # button_more_imgs = "/html/body/div[2]/c-wiz/div[4]/div[1]/div/div/div/div/div[5]/input"
     # browser.find_element_by_xpath(button_more_imgs).click()
+    try:
+        os.makedirs(dest_folder_path)
+        one_face_folder_path = dest_folder_path + "oneFace\\"
+        os.makedirs(one_face_folder_path)
+        print("start scraping ...")
 
-    os.makedirs(dest_folder_path)
-    one_face_folder_path = dest_folder_path + "oneFace\\"
-    os.makedirs(one_face_folder_path)
-    print("start scraping ...")
-
-    # TODO: catch when not sufficient face images are found and scroll is over
-    for x in browser.find_elements_by_xpath('//img[contains(@class,"rg_i Q4LuWd")]'):
-        if succounter == max_count:
-            break
-        counter = counter + 1
-        print("Total Count:", counter)
-        print("Successful Count:", succounter)
-        img = x.get_attribute('src')
-        new_filename = "image"+str(counter)+".jpg"
-
-        try:
-            path = dest_folder_path
-            path += new_filename
-            urllib.request.urlretrieve(img, path)
-            (n_faces, conf_vals) = query_confidence_values(path)
-            # TODO put conf threshold value in scrape_config
-            if n_faces == 1 and conf_vals[0] >= sc.THRESHOLD_CONF_VALUE:
-                copyfile(path, one_face_folder_path + new_filename)
-                succounter += 1
-        except Exception as e:
-            print(e)
-
-    print(succounter, "pictures succesfully downloaded")
-    browser.close()
+        # TODO: catch when not sufficient face images are found and scroll is over
+        for x in browser.find_elements_by_xpath('//img[contains(@class,"rg_i Q4LuWd")]'):
+            if succounter == max_count:
+                break
+            counter = counter + 1
+            print("Total Count:", counter)
+            print("Successful Count:", succounter)
+            img = x.get_attribute('src')
+            new_filename = "image"+str(counter)+".jpg"
+            try:
+                path = dest_folder_path
+                path += new_filename
+                urllib.request.urlretrieve(img, path)
+                (n_faces, conf_vals) = query_confidence_values(path)
+                if n_faces == 1 and conf_vals[0] >= sc.THRESHOLD_CONF_VALUE:
+                    copyfile(path, one_face_folder_path + new_filename)
+                    succounter += 1
+            except Exception as e:
+                print(e)
+        print(succounter, "pictures succesfully downloaded")
+        browser.close()
+    except FileExistsError:
+        print("skipping duplicate name " + search_term)
 
 def csv_iterate(csv_path, n_imgs, save_path, max_sleep_time=5):
     csv_data = pd.read_csv(csv_path, header=None)
