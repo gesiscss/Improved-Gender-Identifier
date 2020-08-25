@@ -3,3 +3,6 @@
 
 data/
 data\
+
+# template for config file for scraping of Google images
+retrieve_data/scrape_config.py.tmp
