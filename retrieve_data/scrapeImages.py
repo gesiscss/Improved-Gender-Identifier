@@ -13,9 +13,6 @@ import scrape_config as sc
 import requests
 from shutil import copyfile
 
-import sys
-sys.stdout = open('sl_0825_abf.txt','wt')
-
 def query_confidence_values(image_path):
     fs = {"" : open(image_path, 'rb')}
     r = requests.post(sc.PIC_UPLOAD_URL, files=fs)
@@ -42,6 +39,12 @@ def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path=
 
     # button_more_imgs = "/html/body/div[2]/c-wiz/div[4]/div[1]/div/div/div/div/div[5]/input"
     # browser.find_element_by_xpath(button_more_imgs).click()
+
+    os.makedirs(dest_folder_path)
+    one_face_folder_path = dest_folder_path + "oneFace\\"
+    os.makedirs(one_face_folder_path)
+    print("start scraping ...")
+
     try:
         # TODO: catch when not sufficient face images are found and scroll is over
         for x in browser.find_elements_by_xpath('//img[contains(@class,"rg_i Q4LuWd")]'):
@@ -64,7 +67,7 @@ def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path=
                     copyfile(path, one_face_folder_path + new_filename)
                     succounter += 1
             except Exception as e:
-                print(e)
+                print(type(e))
         print(succounter, "pictures succesfully downloaded")
         browser.close()
 
@@ -92,4 +95,4 @@ def csv_iterate(csv_path, save_path, max_sleep_time=5):
     glossary.to_csv(save_path + "glossary.csv")
 
 csv_iterate(sc.PATHS_MALE[0], sc.PATHS_MALE[1])
-# csv_iterate(sc.PATHS_FEMALE[0], sc.PATHS_FEMALE[1])
+csv_iterate(sc.PATHS_FEMALE[0], sc.PATHS_FEMALE[1])
