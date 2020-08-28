@@ -8,7 +8,6 @@ import urllib.request
 import pandas as pd
 from time import sleep
 import random
-
 import scrape_config as sc
 import requests
 from shutil import copyfile
@@ -40,41 +39,42 @@ def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path=
     # button_more_imgs = "/html/body/div[2]/c-wiz/div[4]/div[1]/div/div/div/div/div[5]/input"
     # browser.find_element_by_xpath(button_more_imgs).click()
 
+    if os.path.isdir(dest_folder_path):
+        print("Name already exists. Skipping.")
+        return 
+
     os.makedirs(dest_folder_path)
     one_face_folder_path = dest_folder_path + "oneFace\\"
     os.makedirs(one_face_folder_path)
     print("start scraping ...")
 
-    try:
-        # TODO: catch when not sufficient face images are found and scroll is over
-        for x in browser.find_elements_by_xpath('//img[contains(@class,"rg_i Q4LuWd")]'):
-            if succounter == max_count:
-                break
-            counter = counter + 1
-            print("Total Count:", counter)
-            print("Successful Count:", succounter)
-            img = x.get_attribute('src')
-            if img is None:
-                img = x.get_attribute('data-src')    
-                        
-            new_filename = "image"+str(counter)+".jpg"
-            try:
-                path = dest_folder_path
-                path += new_filename
-                urllib.request.urlretrieve(img, path)
-                (n_faces, conf_vals) = query_confidence_values(path)
-                if n_faces == 1 and conf_vals[0] >= sc.THRESHOLD_CONF_VALUE:
-                    copyfile(path, one_face_folder_path + new_filename)
-                    succounter += 1
-            except Exception as e:
-                print(type(e))
-        print(succounter, "pictures succesfully downloaded")
-        browser.close()
-
-    except FileExistsError:
-        print("skipping duplicate name " + search_term)
+    # TODO: catch when not sufficient face images are found and scroll is over
+    for x in browser.find_elements_by_xpath('//img[contains(@class,"rg_i Q4LuWd")]'):
+        if succounter == max_count:
+            break
+        counter = counter + 1
+        print("Total Count:", counter)
+        print("Successful Count:", succounter)
+        img = x.get_attribute('src')
+        if img is None:
+            img = x.get_attribute('data-src')    
+                    
+        new_filename = "image"+str(counter)+".jpg"
+        try:
+            path = dest_folder_path
+            path += new_filename
+            urllib.request.urlretrieve(img, path)
+            (n_faces, conf_vals) = query_confidence_values(path)
+            if n_faces == 1 and conf_vals[0] >= sc.THRESHOLD_CONF_VALUE:
+                copyfile(path, one_face_folder_path + new_filename)
+                succounter += 1
+        except Exception as e:
+            print(type(e))
+    print(succounter, "pictures succesfully downloaded")
+    browser.close()
 
 def csv_iterate(csv_path, save_path, max_sleep_time=5):
+    # TODO first line read as header?
     csv_data = pd.read_csv(csv_path, header=None)
 
     # assuming there is no explicit index, just the position in the file
