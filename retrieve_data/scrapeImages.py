@@ -10,7 +10,7 @@ from time import sleep
 import random
 import scrape_config as sc
 import requests
-from shutil import copyfile
+from shutil import copyfile 
 
 def query_confidence_values(image_path):
     fs = {"" : open(image_path, 'rb')}
@@ -38,7 +38,6 @@ def download_gimags(search_term, max_count, dest_folder_path, chromedriver_path=
 
     # button_more_imgs = "/html/body/div[2]/c-wiz/div[4]/div[1]/div/div/div/div/div[5]/input"
     # browser.find_element_by_xpath(button_more_imgs).click()
-
     if os.path.isdir(dest_folder_path):
         print("Name already exists. Skipping.")
         return 
@@ -95,4 +94,4 @@ def csv_iterate(csv_path, save_path, max_sleep_time=5):
     glossary.to_csv(save_path + "glossary.csv")
 
 csv_iterate(sc.PATHS_MALE[0], sc.PATHS_MALE[1])
-csv_iterate(sc.PATHS_FEMALE[0], sc.PATHS_FEMALE[1])
+#csv_iterate(sc.PATHS_FEMALE[0], sc.PATHS_FEMALE[1])
