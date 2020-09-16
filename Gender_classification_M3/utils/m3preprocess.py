@@ -73,6 +73,10 @@ def extract_files(dataset, path_to_data, path_to_output):
         extract_zip(path_to_data, path_to_output)
         if dataset == 'oui':
             path_to_images = path_to_output + 'OUI/'
+        elif dataset == 'scholar':
+            extract_zip(path_to_output+'scholar_male.zip', path_to_output)
+            extract_zip(path_to_output+'scholar_female.zip', path_to_output)
+            path_to_images = path_to_output
         else:
             path_to_images = path_to_output
     print('Files successfully extracted to ', path_to_images)
@@ -82,20 +86,27 @@ def url_to_image(url, file_name):
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
     img.save(file_name)
+    
+    
+def fill_image_names(path, scholar):
+    for name in os.listdir(path):
+        images = os.listdir(path+name)
+        images = [int(image.split('image')[1][:-4]) for image in images] #extracting image numbers for sorting
+        images.sort()
+        image_names = [path + name + '/image'+ str(image_num) + '.jpg' for image_num in images[:5]]
+        while len(image_names) < 5:
+            image_names = image_names + [None]
+        scholar.loc[scholar['Name'] == name, 'Image1':'Image5'] = image_names
+
 
 
 def get_scholar_data(path_to_images, path_to_output):
-    scholar = pd.DataFrame()
-    for file in os.listdir(path_to_images):
-        if file.endswith('.csv') and file!='result.csv':
-            scholar_temp = pd.read_csv(path_to_images + file, names=['Name', 'Image1', 'Image2', 'Image3', 'Image4', 'Image5'])
-            scholar_temp['gender'] = file.split('_')[0]
-            scholar = scholar.append(scholar_temp)
+    global scholar
+    scholar = pd.DataFrame(columns=['Name', 'Gender', 'Image1', 'Image2', 'Image3', 'Image4', 'Image5'])
+    scholar['Name'] = os.listdir(path_to_images+'scholar_female/') + os.listdir(path_to_images+'scholar_male/')
+    scholar['Gender'][:len(os.listdir(path_to_images+'scholar_female/'))] = 'F'
+    scholar['Gender'][len(os.listdir(path_to_images+'scholar_female/')):] = 'M'
 
-    scholar = scholar[scholar['Image1'].str.contains("u")]
-    scholar[['Image1', 'Image2', 'Image3', 'Image4', 'Image5']] = scholar[['Image1', 'Image2', 'Image3', 'Image4', 'Image5']].applymap(lambda x: x.split('\'')[1])
-    scholar = scholar.melt(id_vars=["Name", "gender"],
-                value_name="Link")
-    scholar['file_name'] = scholar['Name'] + '_' + scholar['variable'] + '.png'
-    #scholar.apply(lambda x: url_to_image(x['Link'], path_to_output+x['file_name']), axis=1)
+    fill_image_names(path_to_images+'scholar_female/', scholar)
+    fill_image_names(path_to_images+'scholar_male/', scholar)
     return scholar
