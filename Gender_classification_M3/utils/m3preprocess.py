@@ -74,9 +74,9 @@ def extract_files(dataset, path_to_data, path_to_output):
         if dataset == 'oui':
             path_to_images = path_to_output + 'OUI/'
         elif dataset == 'scholar':
-            extract_zip(path_to_output+'scholar_male.zip', path_to_output)
-            extract_zip(path_to_output+'scholar_female.zip', path_to_output)
-            path_to_images = path_to_output
+            extract_zip(path_to_data, path_to_output)
+            extract_zip(path_to_output+'scholar_images.zip', path_to_output+'scholar_images/')
+            path_to_images = path_to_output+'scholar_images/'
         else:
             path_to_images = path_to_output
     print('Files successfully extracted to ', path_to_images)
