@@ -2,7 +2,7 @@
 The notebook path is 'Deepface/Deepface.ipynb'
 ## Information about Deepface model :
 Deepface (Gender): is based on the research article of the computer vision group of ETH Zurich. The model is using the VGG_Face model built with Keras and for the training, they used a transfer learning (by using pre-trained weights of vgg-face model and retrain the model with wiki and imdb dataset) ([source code](https://github.com/serengil/deepface))
-<img src="deepface_viz.png" width=400>
+<img src="deepface_viz.png">
 
 ### Training data
 After initializing the model with the weight from the original model and freeze all layers except last 3 convolution layers, the model was retraind with pruned wiki and imdb datasets (removing images with no face or multiple faces, with no gender and with threshold less than 3)
