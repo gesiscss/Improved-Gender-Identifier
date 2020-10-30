@@ -6,3 +6,4 @@ Pillow>=6.2.1
 m3inference
 pathlib
 gender_guesser
+torch==1.6.0
