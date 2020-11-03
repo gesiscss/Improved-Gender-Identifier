@@ -7,3 +7,4 @@ m3inference
 pathlib
 gender_guesser
 torch==1.6.0
+deepface
