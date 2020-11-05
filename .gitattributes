@@ -1,6 +1,6 @@
 *.csv filter=lfs diff=lfs merge=lfs -text
 *.full_model filter=lfs diff=lfs merge=lfs -text
 *.mdl filter=lfs diff=lfs merge=lfs -text
-
 *.ipynb filter=nbstripout
 *.ipynb diff=ipynb
+*.h5 filter=lfs diff=lfs merge=lfs -text
