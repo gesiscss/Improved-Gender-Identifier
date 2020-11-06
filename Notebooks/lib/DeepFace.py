@@ -369,7 +369,7 @@ def analyze(img_path, actions = [], models = {}, enforce_detection = True):
 	if 'gender' in actions:
 		if 'gender' in models:
 			#print("already built gender model is passed")
-			print('test')
+	
 			gender_model = models['gender']
 		else:
 			gender_model = Gender.loadModel()
