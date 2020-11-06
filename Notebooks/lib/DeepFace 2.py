@@ -348,7 +348,7 @@ def analyze(img_path, actions = [], models = {}, enforce_detection = True):
 	if len(actions) == 0:
 		actions= ['emotion', 'age', 'gender', 'race']
 
-	#print("Actions to do: ", actions)
+	print("Actions to do: ", actions)
 
 	#---------------------------------
 
@@ -368,7 +368,7 @@ def analyze(img_path, actions = [], models = {}, enforce_detection = True):
 
 	if 'gender' in actions:
 		if 'gender' in models:
-			#print("already built gender model is passed")
+			print("already built gender model is passed")
 			gender_model = models['gender']
 		else:
 			gender_model = Gender.loadModel()
@@ -400,7 +400,7 @@ def analyze(img_path, actions = [], models = {}, enforce_detection = True):
 		#for action in actions:
 		for index in pbar:
 			action = actions[index]
-			#pbar.set_description("Action: %s" % (action))
+			pbar.set_description("Action: %s" % (action))
 
 			if action_idx > 0:
 				resp_obj += ", "
