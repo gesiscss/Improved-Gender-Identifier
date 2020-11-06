@@ -48,6 +48,26 @@ precision_img_female= [0.74,0.87,0.71,0.96,0.99,0.97,0.79,0.94,0.83,0.98,1.0,1.0
 recall_img_female= [0.65,0.55,0.74,0.75,0.87,0.92,0.71,0.72,0.55,0.70,0.52,0.67]
 f1_score_img_female= [0.69,0.68,0.72,0.84,0.93,0.95,0.75,0.81,0.66,0.81,0.69,0.80]
 
+coverage_name_male= [0.834,0.784,0.431,0.780,0.904,0.803,0.508,0.807,0.904,0.872,0.497,0.753]
+precision_name_male= [0.950,0.847,0.900,0.970,0.935,0.815,0.875,0.942,0.968,0.988,0.945,0.969]
+recall_name_male= [0.961,0.955,0.943,0.965,0.812,0.839,0.794,0.882,0.976,0.971,0.968,0.988]
+f1_score_name_male= [0.955,0.898,0.921,0.967,0.869,0.827,0.833,0.911,0.972,0.979,0.956,0.978]
+
+coverage_name_female= [0.813,0.814,0.437,0.814,0.656,0.706,0.412,0.728,0.869,0.845,0.412,0.785]
+precision_name_female= [0.975,0.988,0.945,0.965,0.893,0.958,0.816,0.894,0.960,0.898,0.964,0.987]
+recall_name_female= [0.967,0.953,0.903,0.970,0.965,0.951,0.890,0.948,0.948,0.954,0.939,0.967]
+f1_score_name_female= [0.971,0.970,0.923,0.968,0.928,0.954,0.852,0.920,0.954,0.925,0.951,0.977]
+
+coverage_mixed_male= [1,1,1,1]
+precision_mixed_male= [0.942,0.975,0.830,0.937]
+recall_mixed_male= [0.952,0.972,0.952,0.991]
+f1_score_mixed_male= [0.947,0.973,0.887,0.963]
+
+coverage_mixed_female= [1,1,1,1]
+precision_mixed_female= [0.930,0.890,0.947,0.989]
+recall_mixed_female= [0.915,0.903,0.890,0.928]
+f1_score_mixed_female= [0.922,0.896,0.918,0.958]
+
 df_img = pd.DataFrame({'Model': first_col_img, 'Dataset':second_col_img, 'Coverage':coverage_img, 'Precision':precision_img, 'Recall':recall_img,
                   'F1-score': f1_score_img})
 
@@ -60,6 +80,14 @@ df_name = pd.DataFrame({'Model': first_col_name, 'Dataset':second_col_name, 'Cov
 df_img_gender = pd.DataFrame({'Model': first_col_img, 'Dataset':second_col_img, 'Coverage_male':coverage_img_male, 'Precision_male':precision_img_male, 
 	'Recall_male':recall_img_male,'F1-score_male': f1_score_img_male, 'Coverage_female':coverage_img_female, 'Precision_female':precision_img_female, 
 	'Recall_female':recall_img_female,'F1-score_female': f1_score_img_female})
+
+df_name_gender = pd.DataFrame({'Model': first_col_name, 'Dataset':second_col_name, 'Coverage_male':coverage_name_male, 'Precision_male':precision_name_male, 
+    'Recall_male':recall_name_male,'F1-score_male': f1_score_name_male, 'Coverage_female':coverage_name_female, 'Precision_female':precision_name_female, 
+    'Recall_female':recall_name_female,'F1-score_female': f1_score_name_female})
+
+df_mixed_gender = pd.DataFrame({'Model': first_col_mix, 'Dataset':second_col_mix, 'Coverage_male':coverage_mixed_male, 'Precision_male':precision_mixed_male, 
+    'Recall_male':recall_mixed_male,'F1-score_male': f1_score_mixed_male, 'Coverage_female':coverage_mixed_female, 'Precision_female':precision_mixed_female, 
+    'Recall_female':recall_mixed_female,'F1-score_female': f1_score_mixed_female})
 
 
 def discrete_background_color_bins(df, n_bins=5, columns='all'):
@@ -141,6 +169,8 @@ def discrete_background_color_bins(df, n_bins=5, columns='all'):
 (styles_name, legend_name) = discrete_background_color_bins(df_name)
 
 (styles_img_gender, legend_img_gender) = discrete_background_color_bins(df_img_gender)
+(styles_name_gender, legend_name_gender) = discrete_background_color_bins(df_name_gender)
+(styles_mixed_gender, legend_mixed_gender) = discrete_background_color_bins(df_mixed_gender)
 
 white_button_style = {'background-color': 'white',
                       'color': 'black',
@@ -238,7 +268,7 @@ dash_table.DataTable(
 )
 ])
 
-output = [Output("table", "data"), Output("legend", "children"), Output("table", "style_data_conditional"), Output("table", "hidden_columns")]
+output = [Output("table", "data"), Output("legend", "children"), Output("table", "style_data_conditional"), Output("table", "hidden_columns"), Output("table_gender", "data"), Output("legend_gender", "children"), Output("table_gender", "style_data_conditional"), Output("table_gender", "hidden_columns")]
 output.extend([Output(i, "style") for i in ['images', 'names', 'mixed']])
 
 @app.callback(
@@ -248,17 +278,17 @@ output.extend([Output(i, "style") for i in ['images', 'names', 'mixed']])
 
 def change_button_style(*n_clicks_timestamp):
 	if all(v == 0 for v in n_clicks_timestamp):
-		return df_img.to_dict('records'), legend_img, styles_img, ['Precision','Recall'], red_button_style, white_button_style, white_button_style
+		return df_img.to_dict('records'), legend_img, styles_img, ['Precision','Recall'], df_img_gender.to_dict('records'), legend_img_gender, styles_img_gender, ['Precision_male','Recall_male', 'Precision_female','Recall_female'], red_button_style, white_button_style, white_button_style
 	max_index = n_clicks_timestamp.index(max(i for i in n_clicks_timestamp if i is not None))
 	if max_index == 0:
-		return df_img.to_dict('records'), legend_img, styles_img, ['Precision','Recall'], red_button_style, white_button_style, white_button_style
+		return df_img.to_dict('records'), legend_img, styles_img, ['Precision','Recall'], df_img_gender.to_dict('records'), legend_img_gender, styles_img_gender, ['Precision_male','Recall_male', 'Precision_female','Recall_female'], red_button_style, white_button_style, white_button_style
 	elif max_index == 1:
-		return df_name.to_dict('records'), legend_name, styles_name, ['Precision','Recall'], white_button_style, red_button_style, white_button_style
+		return df_name.to_dict('records'), legend_name, styles_name, ['Precision','Recall'], df_name_gender.to_dict('records'), legend_name_gender, styles_name_gender, ['Precision_male','Recall_male', 'Precision_female','Recall_female'], white_button_style, red_button_style, white_button_style
 	elif max_index == 2:
-		return df_mix.to_dict('records'), legend_mix, styles_mix, ['Precision','Recall'], white_button_style, white_button_style, red_button_style
+		return df_mix.to_dict('records'), legend_mix, styles_mix, ['Precision','Recall'], df_mixed_gender.to_dict('records'), legend_mixed_gender, styles_mixed_gender, ['Precision_male','Recall_male', 'Precision_female','Recall_female'], white_button_style, white_button_style, red_button_style
         
 
 if __name__ == '__main__':
-    app.run_server(debug=True,
+    app.run_server(
         port='8050',
         host='194.95.75.11')
