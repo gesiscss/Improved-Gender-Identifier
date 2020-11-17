@@ -3,5 +3,8 @@ jupyter nbextension enable --py widgetsnbextension
 jupyter contrib nbextension install --user
 jupyter nbextension enable init_cell/main
 jupyter trust Notebooks/M3_Gender_Prediction.ipynb
+jupyter trust Notebooks/M3_Gender_Prediction_Batch.ipynb
+jupyter trust Notebooks/deepface_Gender_Prediction.ipynb
+jupyter trust Notebooks/deepface_Gender_Prediction_Batch.ipynb
 jupyter nbextension enable hide_input_all/main
 jupyter nbextension enable hide_input/main
