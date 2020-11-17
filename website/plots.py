@@ -203,14 +203,25 @@ dash_table.DataTable(
     columns=[
     	{'name': 'Model', 'id': 'Model', 'type': 'text'},
         {'name': 'Dataset', 'id': 'Dataset', 'type': 'text'},
-        {'name': 'Coverage', 'id': 'Coverage', 'type': 'numeric', 'hideable':True},
-        {'name': 'Precision', 'id': 'Precision', 'type': 'numeric', 'hideable':True},
-        {'name': 'Recall', 'id': 'Recall', 'type': 'numeric', 'hideable':True},
-        {'name': 'F1-score', 'id': 'F1-score', 'type': 'numeric', 'hideable':True}
+        {'name': 'Coverage ℹ️', 'id': 'Coverage', 'type': 'numeric', 'hideable':True},
+        {'name': 'Precision ℹ️', 'id': 'Precision', 'type': 'numeric', 'hideable':True},
+        {'name': 'Recall ℹ️', 'id': 'Recall', 'type': 'numeric', 'hideable':True},
+        {'name': 'F1-score ℹ️', 'id': 'F1-score', 'type': 'numeric', 'hideable':True}
     ],
     hidden_columns=['Precision','Recall'],
     style_table={'margin-bottom': '50px'},
     data=df_img.to_dict('records'),
+    # tooltip_header={c: {'value':f'{c} Info',  'delay':'null', 'duration': 'null'}
+    #     for c in ['Model', 'Dataset', 'Coverage', 'Precision', 'Recall', 'F1-score']},
+    tooltip_header={'Coverage': {'value': '''Coverage is the percentage of entities for which a gender was predicted.\n
+**M3** has a coverage of 1, because it has a threshold of 0.5 for confidence score, so gender with a max confidence score is returned''', 'type':'markdown', 'duration':30000},
+                    'Precision': {'value': '''Precision is calculated as weighted average precision of both classes (considering the green ones are correctly predicted and black ones are wrong): \n
+![confusion_matrix](http://193.175.238.89/Gender_Inference/static/images/multi_class_evaluation.png)''', 'type':'markdown', 'duration':30000},
+                    'Recall': {'value': '''Recall is calculated as weighted average recall of both classes (considering the green ones are correctly predicted and black ones are wrong): \n
+![confusion_matrix](http://193.175.238.89/Gender_Inference/static/images/multi_class_evaluation.png)''', 'type':'markdown', 'duration':30000},
+                    'F1-score': {'value': ''' \n
+![f1_score](http://193.175.238.89/Gender_Inference/static/images/f1_score_f.png)''', 'type':'markdown', 'duration':30000}
+    },
     style_cell={'textAlign': 'center'},
     style_data_conditional=styles_img,
     style_header_conditional=[
@@ -289,6 +300,6 @@ def change_button_style(*n_clicks_timestamp):
         
 
 if __name__ == '__main__':
-    app.run_server(
+    app.run_server(debug=True,
         port='8050',
         host='194.95.75.11')

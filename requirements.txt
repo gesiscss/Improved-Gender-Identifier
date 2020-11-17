@@ -11,3 +11,4 @@ keras==2.2.4
 tensorflow==1.14.0
 gdown
 h5py==2.10.0
+jupyter_contrib_nbextensions

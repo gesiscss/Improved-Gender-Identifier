@@ -1,0 +1,7 @@
+jupyter contrib nbextension install --user
+jupyter nbextension enable --py widgetsnbextension
+cp main.css /srv/conda/envs/notebook/lib/python3.8/site-packages/jupyter_contrib_nbextensions/nbextensions/exercise2
+jupyter nbextension enable init_cell/main
+jupyter nbextension enable hide_input_all/main
+jupyter nbextension enable hide_input/main
+jupyter nbextension enable exercise2/main

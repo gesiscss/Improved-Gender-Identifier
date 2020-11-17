@@ -1,0 +1,17 @@
+img[alt=confusion_matrix] {
+  width: 90%;
+  border: none;
+  background: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+img[alt=f1_score] {
+  width: 80%;
+  border: none;
+  background: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
