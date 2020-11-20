@@ -7,8 +7,9 @@ import dash_table
 import dash_html_components as html
 import colorlover
 from dash.dependencies import Input, Output
+import dash_bootstrap_components as dbc
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css', dbc.themes.BOOTSTRAP]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
@@ -99,8 +100,8 @@ def discrete_background_color_bins(df, n_bins=5, columns='all'):
             df_numeric_columns = df.select_dtypes('number')
     else:
         df_numeric_columns = df[columns]
-    df_max = df_numeric_columns.max().max()
-    df_min = df_numeric_columns.min().min()
+    df_max = 1
+    df_min = 0.35
     ranges = [
         ((df_max - df_min) * i) + df_min
         for i in bounds
@@ -124,7 +125,8 @@ def discrete_background_color_bins(df, n_bins=5, columns='all'):
                 },
                 'backgroundColor': backgroundColor,
                 'color': color,
-                'border' : '1px solid '+ backgroundColor
+                'border' : '1px solid '+ backgroundColor,
+                'fontSize': 11
             })
         legend.append(
             html.Div(style={'display': 'inline-block', 'width': '60px'}, children=[
@@ -146,6 +148,7 @@ def discrete_background_color_bins(df, n_bins=5, columns='all'):
         'color': 'black',
         'border': '1px solid white',
         'textAlign': 'right',
+        'fontSize': 11, 
         'width': '80px'
     	},
     	{
@@ -172,131 +175,148 @@ def discrete_background_color_bins(df, n_bins=5, columns='all'):
 (styles_name_gender, legend_name_gender) = discrete_background_color_bins(df_name_gender)
 (styles_mixed_gender, legend_mixed_gender) = discrete_background_color_bins(df_mixed_gender)
 
-white_button_style = {'background-color': 'white',
-                      'color': 'black',
-                      # 'height': '50px',
-                      'width': '120px',
-                      'margin-bottom': '50px',
-                      'margin-left': '10px',
-                      'textAlign': 'center',
-                      'padding': '0'}
-                      # 'paddingLeft': '5px'
+# white_button_style = {'background-color': 'white',
+#                       'color': 'black',
+#                       # 'height': '50px',
+#                       'width': '120px',
+#                       'margin-bottom': '50px',
+#                       'margin-left': '10px',
+#                       'textAlign': 'center',
+#                       'padding': '0'}
+#                       # 'paddingLeft': '5px'
 
-red_button_style = {'background-color': '#add8e6',
-                    'color': 'white',
-                    # 'height': '50px',
-                    'width': '120px',
-                    'margin-bottom': '50px',
-                    'margin-left': '10px',
-                    'textAlign': 'center',
-                    'padding': '0'}
+# red_button_style = {'background-color': '#add8e6',
+#                     'color': 'white',
+#                     # 'height': '50px',
+#                     'width': '120px',
+#                     'margin-bottom': '50px',
+#                     'margin-left': '10px',
+#                     'textAlign': 'center',
+#                     'padding': '0'}
+
+tabs = html.Div(
+    [
+        dbc.Tabs(
+            [
+                dbc.Tab(label="Images only", tab_id="images"),
+                dbc.Tab(label="Names only", tab_id="names"),
+                dbc.Tab(label="Images + Names", tab_id="mixed"),
+            ],
+            id="tabs",
+            active_tab="images",
+            style={
+                'fontSize': 12, 
+            }
+        ),
+    html.Div([
+        dash_table.DataTable(
+            id='table',
+            columns=[
+                {'name': 'Model', 'id': 'Model', 'type': 'text'},
+                {'name': 'Dataset', 'id': 'Dataset', 'type': 'text'},
+                {'name': 'Coverage ℹ️', 'id': 'Coverage', 'type': 'numeric', 'hideable':True},
+                {'name': 'Precision ℹ️', 'id': 'Precision', 'type': 'numeric', 'hideable':True},
+                {'name': 'Recall ℹ️', 'id': 'Recall', 'type': 'numeric', 'hideable':True},
+                {'name': 'F1-score ℹ️', 'id': 'F1-score', 'type': 'numeric', 'hideable':True}
+            ],
+            hidden_columns=['Precision','Recall'],
+            style_table={'overlowX': 'hidden'},
+            data=df_img.to_dict('records'),
+            # tooltip_header={c: {'value':f'{c} Info',  'delay':'null', 'duration': 'null'}
+            #     for c in ['Model', 'Dataset', 'Coverage', 'Precision', 'Recall', 'F1-score']},
+            tooltip_header={'Coverage': {'value': '''Coverage is the percentage of entities for which a gender was predicted.\n
+        **M3** has a coverage of 1, because it has a threshold of 0.5 for confidence score, so gender with a max confidence score is returned''', 'type':'markdown', 'duration':30000},
+                            'Precision': {'value': '''Precision is calculated as weighted average precision of both classes (considering the green ones are correctly predicted and black ones are wrong): \n
+        ![confusion_matrix](http://193.175.238.89/Gender_Inference/static/images/multi_class_evaluation.png)''', 'type':'markdown', 'duration':30000},
+                            'Recall': {'value': '''Recall is calculated as weighted average recall of both classes (considering the green ones are correctly predicted and black ones are wrong): \n
+        ![confusion_matrix](http://193.175.238.89/Gender_Inference/static/images/multi_class_evaluation.png)''', 'type':'markdown', 'duration':30000},
+                            'F1-score': {'value': ''' \n
+        ![f1_score](http://193.175.238.89/Gender_Inference/static/images/f1_score_f.png)''', 'type':'markdown', 'duration':30000}
+            },
+            style_cell={'textAlign': 'center'},
+            style_data_conditional=styles_img,
+            style_header_conditional=[
+            {
+                'backgroundColor': 'white',
+                'color': 'black',
+                'border': '1px solid white',
+                'fontWeight': 'bold',
+                'fontSize': 12, 
+                'textAlign': 'center'
+            },
+            {
+                    'if': {
+                        'column_id': ['Dataset','Model']
+                    },
+                    'textAlign': 'right'
+                }
+               ]
+        ), 
+        dash_table.DataTable(
+            id='table_gender',
+            columns=[
+                {'name': ['','Model'], 'id': 'Model', 'type': 'text'},
+                {'name': ['','Dataset'], 'id': 'Dataset', 'type': 'text'},
+                {'name': ['Male','Coverage'], 'id': 'Coverage_male', 'type': 'numeric', 'hideable':True},
+                {'name': ['Male', 'Precision'], 'id': 'Precision_male', 'type': 'numeric', 'hideable':True},
+                {'name': ['Male','Recall'], 'id': 'Recall_male', 'type': 'numeric', 'hideable':True},
+                {'name': ['Male','F1-score'], 'id': 'F1-score_male', 'type': 'numeric', 'hideable':True},
+                {'name': ['Female','Coverage'], 'id': 'Coverage_female', 'type': 'numeric', 'hideable':True},
+                {'name': ['Female', 'Precision'], 'id': 'Precision_female', 'type': 'numeric', 'hideable':True},
+                {'name': ['Female','Recall'], 'id': 'Recall_female', 'type': 'numeric', 'hideable':True},
+                {'name': ['Female','F1-score'], 'id': 'F1-score_female', 'type': 'numeric', 'hideable':True}
+            ],
+            hidden_columns=['Precision_male','Precision_female', 'Recall_male', 'Recall_female'],
+            data=df_img_gender.to_dict('records'),
+            # style_table={'margin-left': '15px'},
+            merge_duplicate_headers=True,
+            style_cell={'textAlign': 'center'},
+            style_data_conditional=styles_img_gender,
+            style_header_conditional=[
+            {
+                'backgroundColor': 'white',
+                'color': 'black',
+                'border': '1px solid white',
+                'fontWeight': 'bold',
+                'fontSize': 12, 
+                'textAlign': 'center'
+            },
+            # {
+            #         'if': {
+            #             'column_id': ['Dataset','Model']
+            #         },
+            #         'textAlign': 'right'
+            #     }
+               ]
+        ),
+        html.Div(legend_img_gender, style={'float': 'right'}, id='legend_gender')
+        ], id="content")
+    ], style={'overlow': 'hidden'}
+)
 
 app.layout = html.Div([
-html.Button('Images only', id='images', n_clicks_timestamp=0),
-html.Button('Names only', id='names', n_clicks_timestamp=0),
-html.Button('Images + Names', id='mixed', n_clicks_timestamp=0),
-# html.Button('F1-score', id='f1-score', n_clicks=0),
-# html.Button('All', id='all', n_clicks=1),
-html.Div(legend_img, style={'float': 'right'}, id='legend'),
-dash_table.DataTable(
-    id='table',
-    columns=[
-    	{'name': 'Model', 'id': 'Model', 'type': 'text'},
-        {'name': 'Dataset', 'id': 'Dataset', 'type': 'text'},
-        {'name': 'Coverage ℹ️', 'id': 'Coverage', 'type': 'numeric', 'hideable':True},
-        {'name': 'Precision ℹ️', 'id': 'Precision', 'type': 'numeric', 'hideable':True},
-        {'name': 'Recall ℹ️', 'id': 'Recall', 'type': 'numeric', 'hideable':True},
-        {'name': 'F1-score ℹ️', 'id': 'F1-score', 'type': 'numeric', 'hideable':True}
-    ],
-    hidden_columns=['Precision','Recall'],
-    style_table={'margin-bottom': '50px'},
-    data=df_img.to_dict('records'),
-    # tooltip_header={c: {'value':f'{c} Info',  'delay':'null', 'duration': 'null'}
-    #     for c in ['Model', 'Dataset', 'Coverage', 'Precision', 'Recall', 'F1-score']},
-    tooltip_header={'Coverage': {'value': '''Coverage is the percentage of entities for which a gender was predicted.\n
-**M3** has a coverage of 1, because it has a threshold of 0.5 for confidence score, so gender with a max confidence score is returned''', 'type':'markdown', 'duration':30000},
-                    'Precision': {'value': '''Precision is calculated as weighted average precision of both classes (considering the green ones are correctly predicted and black ones are wrong): \n
-![confusion_matrix](http://193.175.238.89/Gender_Inference/static/images/multi_class_evaluation.png)''', 'type':'markdown', 'duration':30000},
-                    'Recall': {'value': '''Recall is calculated as weighted average recall of both classes (considering the green ones are correctly predicted and black ones are wrong): \n
-![confusion_matrix](http://193.175.238.89/Gender_Inference/static/images/multi_class_evaluation.png)''', 'type':'markdown', 'duration':30000},
-                    'F1-score': {'value': ''' \n
-![f1_score](http://193.175.238.89/Gender_Inference/static/images/f1_score_f.png)''', 'type':'markdown', 'duration':30000}
-    },
-    style_cell={'textAlign': 'center'},
-    style_data_conditional=styles_img,
-    style_header_conditional=[
-    {
-    	'backgroundColor': 'white',
-        'color': 'black',
-        'border': '1px solid white',
-        'fontWeight': 'bold',
-        'textAlign': 'center'
-    },
-    {
-            'if': {
-                'column_id': ['Dataset','Model']
-            },
-            'textAlign': 'right'
-        }
-       ]
-), 
-html.Div(legend_img_gender, style={'float': 'right'}, id='legend_gender'),
-dash_table.DataTable(
-    id='table_gender',
-    columns=[
-    	{'name': ['','Model'], 'id': 'Model', 'type': 'text'},
-        {'name': ['','Dataset'], 'id': 'Dataset', 'type': 'text'},
-        {'name': ['Male','Coverage'], 'id': 'Coverage_male', 'type': 'numeric', 'hideable':True},
-        {'name': ['Male', 'Precision'], 'id': 'Precision_male', 'type': 'numeric', 'hideable':True},
-        {'name': ['Male','Recall'], 'id': 'Recall_male', 'type': 'numeric', 'hideable':True},
-        {'name': ['Male','F1-score'], 'id': 'F1-score_male', 'type': 'numeric', 'hideable':True},
-        {'name': ['Female','Coverage'], 'id': 'Coverage_female', 'type': 'numeric', 'hideable':True},
-        {'name': ['Female', 'Precision'], 'id': 'Precision_female', 'type': 'numeric', 'hideable':True},
-        {'name': ['Female','Recall'], 'id': 'Recall_female', 'type': 'numeric', 'hideable':True},
-        {'name': ['Female','F1-score'], 'id': 'F1-score_female', 'type': 'numeric', 'hideable':True}
-    ],
-    hidden_columns=['Precision_male','Precision_female', 'Recall_male', 'Recall_female'],
-    data=df_img_gender.to_dict('records'),
-    # style_table={'marginTop': '50px'},
-    merge_duplicate_headers=True,
-    style_cell={'textAlign': 'center'},
-    style_data_conditional=styles_img_gender,
-    style_header_conditional=[
-    {
-    	'backgroundColor': 'white',
-        'color': 'black',
-        'border': '1px solid white',
-        'fontWeight': 'bold',
-        'textAlign': 'center'
-    },
-    # {
-    #         'if': {
-    #             'column_id': ['Dataset','Model']
-    #         },
-    #         'textAlign': 'center'
-    #     }
-       ]
-)
+    html.Div('Compare different types of methods based on input:'),
+# html.Button('Images only', id='images', n_clicks_timestamp=0),
+# html.Button('Names only', id='names', n_clicks_timestamp=0),
+# html.Button('Images + Names', id='mixed', n_clicks_timestamp=0),
+tabs
 ])
 
-output = [Output("table", "data"), Output("legend", "children"), Output("table", "style_data_conditional"), Output("table", "hidden_columns"), Output("table_gender", "data"), Output("legend_gender", "children"), Output("table_gender", "style_data_conditional"), Output("table_gender", "hidden_columns")]
-output.extend([Output(i, "style") for i in ['images', 'names', 'mixed']])
+output = [Output("table", "data"), Output("table", "style_data_conditional"), Output("table", "hidden_columns"), Output("table_gender", "data"), Output("table_gender", "style_data_conditional"), Output("table_gender", "hidden_columns")]
+# output.extend([Output(i, "style") for i in ['images', 'names', 'mixed']])
 
 @app.callback(
     output,
-    [Input(i, "n_clicks_timestamp") for i in ['images', 'names', 'mixed']],
+    [Input("tabs", "active_tab")],
 )
 
-def change_button_style(*n_clicks_timestamp):
-	if all(v == 0 for v in n_clicks_timestamp):
-		return df_img.to_dict('records'), legend_img, styles_img, ['Precision','Recall'], df_img_gender.to_dict('records'), legend_img_gender, styles_img_gender, ['Precision_male','Recall_male', 'Precision_female','Recall_female'], red_button_style, white_button_style, white_button_style
-	max_index = n_clicks_timestamp.index(max(i for i in n_clicks_timestamp if i is not None))
-	if max_index == 0:
-		return df_img.to_dict('records'), legend_img, styles_img, ['Precision','Recall'], df_img_gender.to_dict('records'), legend_img_gender, styles_img_gender, ['Precision_male','Recall_male', 'Precision_female','Recall_female'], red_button_style, white_button_style, white_button_style
-	elif max_index == 1:
-		return df_name.to_dict('records'), legend_name, styles_name, ['Precision','Recall'], df_name_gender.to_dict('records'), legend_name_gender, styles_name_gender, ['Precision_male','Recall_male', 'Precision_female','Recall_female'], white_button_style, red_button_style, white_button_style
-	elif max_index == 2:
-		return df_mix.to_dict('records'), legend_mix, styles_mix, ['Precision','Recall'], df_mixed_gender.to_dict('records'), legend_mixed_gender, styles_mixed_gender, ['Precision_male','Recall_male', 'Precision_female','Recall_female'], white_button_style, white_button_style, red_button_style
+def change_button_style(at):
+	if at == "images":
+		return df_img.to_dict('records'), styles_img, ['Precision','Recall'], df_img_gender.to_dict('records'), styles_img_gender, ['Precision_male','Recall_male', 'Precision_female','Recall_female']
+	elif at == "names":
+		return df_name.to_dict('records'), styles_name, ['Precision','Recall'], df_name_gender.to_dict('records'), styles_name_gender, ['Precision_male','Recall_male', 'Precision_female','Recall_female']
+	elif at == "mixed":
+		return df_mix.to_dict('records'), styles_mix, ['Precision','Recall'], df_mixed_gender.to_dict('records'), styles_mixed_gender, ['Precision_male','Recall_male', 'Precision_female','Recall_female']
         
 
 if __name__ == '__main__':
